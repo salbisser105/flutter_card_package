@@ -7,3 +7,6 @@
 
 ## 0.0.3 
 * Add glasmorphism config and other customizable options.
+
+## 0.0.4
+* Add new path for the icons.
