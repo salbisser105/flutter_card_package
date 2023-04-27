@@ -1,5 +1,5 @@
 name: card_package
-description: A new Flutter package for credit card usage.
+description: A new Flutter package for custom credit card usage. Taken from symforms solution packages.
 version: 0.0.1
 homepage: https://github.com/salbisser105/flutter_card_package
 
