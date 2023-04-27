@@ -32,29 +32,28 @@ class Page1 extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text('Page1'),
           backgroundColor: Colors.transparent,
         ),
         body: Center(
           child: CustomCreditCardWidget(
-            padding: 6,
+            padding: 40,
             height: height * 0.215,
             cardBgColor: Colors.green,
             obscureCardNumber: false,
             obscureCardCvv: false,
             chipSizedBoxHeight: 20,
-            sizedBoxCardName: 20,
-            sizedBoxCardNumber: 20,
-            cardNumber: '4444 4444 4444',
+            sizedBoxCardName: 10,
+            sizedBoxCardNumber: 10,
+            cardNumber: '4444 4444 4444 4444',
             expiryDate: '05/26',
             textStyle: Theme.of(context)
                 .textTheme
                 .labelLarge!
-                .copyWith(fontSize: 14, color: Colors.red),
+                .copyWith(fontSize: 20, color: Colors.red),
             cardHolderName: 'Santiago Albisser',
-
             glassmorphismConfig: Glassmorphism(
               blurX: 40.0,
               blurY: 25.0,
@@ -72,7 +71,7 @@ class Page1 extends StatelessWidget {
             isHolderNameVisible: false,
             isChipVisible: true,
             cvvCode: '424',
-            showBackView: true,
+            showBackView: false,
             onCreditCardWidgetChange:
                 (CreditCardBrand) {}, //true when you want to show cvv(back) view
           ),

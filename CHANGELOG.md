@@ -10,3 +10,9 @@
 
 ## 0.0.4
 * Add new path for the icons.
+
+## 0.0.5
+
+* Remove the card holder name from the package.
+* Edit sized box.
+* Change default valid thru field for spanish text.

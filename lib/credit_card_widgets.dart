@@ -4,7 +4,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:card_package/constants.dart';
-import 'package:card_package/extension.dart';
 
 import 'credit_card_animation.dart';
 import 'credit_card_background.dart';
@@ -39,9 +38,8 @@ class CustomCreditCardWidget extends StatefulWidget {
     this.cardBgColor = const Color(0xff1b447b),
     this.obscureCardNumber = true,
     this.obscureCardCvv = true,
-    this.labelCardHolder = 'CARD HOLDER',
     this.labelExpiredDate = 'MM/YY',
-    this.labelValidThru = 'VALID\nTHRU',
+    this.labelValidThru = 'VÁLIDA\nHASTA',
     this.cardType,
     this.isHolderNameVisible = false,
     this.backgroundImage,
@@ -136,10 +134,6 @@ class CustomCreditCardWidget extends StatefulWidget {
   /// Enable/disable gestures on credit card widget. If enabled then flip
   /// animation is started when swiped or tapped. Defaults to true.
   final bool isSwipeGestureEnabled;
-
-  /// Default label for card holder name. This is shown when user hasn't
-  /// entered any text for card holder name.
-  final String labelCardHolder;
 
   /// Default label for expiry date. This is shown when user hasn't entered any
   /// text for expiry date.
@@ -367,6 +361,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
             '${stripped.substring(0, 4)} $middle ${stripped.substring(stripped.length - 4)}';
       }
     }
+
     return CardBackground(
       backgroundImage: widget.backgroundImage,
       backgroundNetworkImage: widget.backgroundNetworkImage,
@@ -379,100 +374,56 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          if (widget.bankName.isNotNullAndNotEmpty)
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16, top: 16),
-                child: Text(
-                  widget.bankName!,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: defaultTextStyle,
-                ),
-              ),
-            ),
           SizedBox(
-            height: widget.chipSizedBoxHeight,
+            height: widget.chipSizedBoxHeight ?? widget.height! * 0.2,
           ),
-          Expanded(
-            flex: widget.isChipVisible ? 1 : 0,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                if (widget.isChipVisible)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16),
-                    child: Image.asset(
-                      'icons/chip.png',
-                      package: 'card_package',
-                      color: widget.chipColor,
-                      scale: 1,
-                    ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              if (widget.isChipVisible)
+                Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Image.asset(
+                    'icons/chip.png',
+                    package: 'card_package',
+                    color: widget.chipColor,
+                    height: 40,
+                    fit: BoxFit.fitHeight,
+                    scale: 1,
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
           SizedBox(height: widget.sizedBoxCardNumber),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Text(
-                widget.cardNumber.isEmpty ? 'XXXX XXXX XXXX XXXX' : number,
-                style: widget.textStyle ?? defaultTextStyle,
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              widget.cardNumber.isEmpty ? 'XXXX XXXX XXXX XXXX' : number,
+              style: widget.textStyle ?? defaultTextStyle,
             ),
           ),
           SizedBox(height: widget.sizedBoxCardName),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    widget.labelValidThru,
-                    style: widget.validThruTextStyle ??
-                        defaultTextStyle.copyWith(fontSize: 7),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    widget.expiryDate.isEmpty
-                        ? widget.labelExpiredDate
-                        : widget.expiryDate,
-                    style: widget.expiryDateTextStyle ?? defaultTextStyle,
-                  ),
-                  const Spacer(),
-                  widget.isHolderNameVisible == false && widget.cardType != null
-                      ? getCardTypeImage(widget.cardType)
-                      : getCardTypeIcon(widget.cardNumber),
-                ],
-              ),
-            ),
-          ),
           Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+            padding: const EdgeInsets.only(left: 16, right: 28),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Visibility(
-                  visible: widget.isHolderNameVisible,
-                  child: Expanded(
-                    child: Text(
-                      widget.cardHolderName.isEmpty
-                          ? widget.labelCardHolder
-                          : widget.cardHolderName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: widget.textStyle ?? defaultTextStyle,
-                    ),
-                  ),
+                Text(
+                  widget.labelValidThru,
+                  style: widget.validThruTextStyle ??
+                      defaultTextStyle.copyWith(fontSize: 7),
+                  textAlign: TextAlign.center,
                 ),
-                widget.cardType != null && widget.isHolderNameVisible == true
+                const SizedBox(width: 10),
+                Text(
+                  widget.expiryDate.isEmpty
+                      ? widget.labelExpiredDate
+                      : widget.expiryDate,
+                  style: widget.expiryDateTextStyle ?? defaultTextStyle,
+                ),
+                const Spacer(),
+                widget.cardType != null
                     ? getCardTypeImage(widget.cardType)
                     : getCardTypeIcon(widget.cardNumber),
               ],
@@ -722,8 +673,8 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
     } else {
       return Image.asset(
         cardTypeIconAsset[cardType]!,
-        height: 48,
-        width: 48,
+        height: 60,
+        width: 60,
         package: 'card_package',
       );
     }
@@ -749,8 +700,8 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
         case CardType.hipercard:
           icon = Image.asset(
             cardTypeIconAsset[ccType]!,
-            height: 48,
-            width: 48,
+            height: 60,
+            width: 60,
             package: 'card_package',
           );
           isAmex = false;
@@ -759,8 +710,8 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
         case CardType.americanExpress:
           icon = Image.asset(
             cardTypeIconAsset[ccType]!,
-            height: 48,
-            width: 48,
+            height: 60,
+            width: 60,
             package: 'card_package',
           );
           isAmex = true;
@@ -768,8 +719,8 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
 
         default:
           icon = const SizedBox(
-            height: 48,
-            width: 48,
+            height: 60,
+            width: 60,
           );
           isAmex = false;
           break;
