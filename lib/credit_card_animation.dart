@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AnimationCard extends StatelessWidget {
   const AnimationCard({
+    super.key,
     required this.child,
     required this.animation,
   });

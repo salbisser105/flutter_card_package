@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 
 import '../credit_card_widgets.dart';
@@ -307,7 +309,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
                           if (_expiryDateController.text
                               .startsWith(RegExp('[2-9]'))) {
                             _expiryDateController.text =
-                                '0' + _expiryDateController.text;
+                                '0${_expiryDateController.text}';
                           }
                           setState(() {
                             expiryDate = _expiryDateController.text;
@@ -370,9 +372,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
                         controller: _cvvCodeController,
                         cursorColor: widget.cursorColor ?? themeColor,
                         onEditingComplete: () {
-                          if (widget.isHolderNameVisible)
+                          if (widget.isHolderNameVisible) {
                             FocusScope.of(context).requestFocus(cardHolderNode);
-                          else {
+                          } else {
                             FocusScope.of(context).unfocus();
                             onCreditCardModelChange(creditCardModel);
                             widget.onFormComplete?.call();

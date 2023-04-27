@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, library_private_types_in_public_api
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -345,17 +347,14 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
             .substring(0, number.length - 5)
             .trim()
             .replaceAll(RegExp(r'\d'), '*');
-        number = start + ' ' + stripped.substring(stripped.length - 4);
+        number = '$start ${stripped.substring(stripped.length - 4)}';
       } else if (stripped.length > 8) {
         final String middle = number
             .substring(4, number.length - 5)
             .trim()
             .replaceAll(RegExp(r'\d'), '*');
-        number = stripped.substring(0, 4) +
-            ' ' +
-            middle +
-            ' ' +
-            stripped.substring(stripped.length - 4);
+        number =
+            '${stripped.substring(0, 4)} $middle ${stripped.substring(stripped.length - 4)}';
       }
     }
     return CardBackground(
@@ -750,7 +749,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
           break;
 
         default:
-          icon = Container(
+          icon = const SizedBox(
             height: 48,
             width: 48,
           );
