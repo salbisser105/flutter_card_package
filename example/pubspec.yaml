@@ -19,8 +19,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  card_package:
-    path: ../
+  card_package: ^0.0.3
+
 
 
 dev_dependencies:

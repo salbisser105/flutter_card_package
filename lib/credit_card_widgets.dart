@@ -345,7 +345,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
                 color: Colors.white,
                 fontFamily: 'halter',
                 fontSize: 15,
-                package: 'flutter_credit_card',
+                package: 'card_package',
               ),
             );
 
@@ -405,7 +405,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
                     padding: const EdgeInsets.only(left: 16),
                     child: Image.asset(
                       'icons/chip.png',
-                      package: 'flutter_credit_card',
+                      package: 'card_package',
                       color: widget.chipColor,
                       scale: 1,
                     ),
@@ -493,7 +493,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
                 color: Colors.black,
                 fontFamily: 'halter',
                 fontSize: 16,
-                package: 'flutter_credit_card',
+                package: 'card_package',
               ),
             );
 
@@ -724,7 +724,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
         cardTypeIconAsset[cardType]!,
         height: 48,
         width: 48,
-        package: 'flutter_credit_card',
+        package: 'card_package',
       );
     }
   }
@@ -751,7 +751,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
             cardTypeIconAsset[ccType]!,
             height: 48,
             width: 48,
-            package: 'flutter_credit_card',
+            package: 'card_package',
           );
           isAmex = false;
           break;
@@ -761,7 +761,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
             cardTypeIconAsset[ccType]!,
             height: 48,
             width: 48,
-            package: 'flutter_credit_card',
+            package: 'card_package',
           );
           isAmex = true;
           break;
