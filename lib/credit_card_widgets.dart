@@ -1,18 +1,18 @@
-// ignore_for_file: constant_identifier_names, library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api
 
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
+import 'package:card_package/constants.dart';
 import 'package:card_package/extension.dart';
 
-import 'constants.dart';
 import 'credit_card_animation.dart';
 import 'credit_card_background.dart';
+import 'package:card_package/models/custom_card_type_icon_model.dart';
+import 'glassmorphism_config.dart';
 import 'models/credit_card_brand_model.dart';
-import 'models/custom_card_type_icon_model.dart';
 
-const Map<CardType, String> CardTypeIconAsset = <CardType, String>{
+const Map<CardType, String> cardTypeIconAsset = <CardType, String>{
   CardType.visa: 'icons/visa.png',
   CardType.americanExpress: 'icons/amex.png',
   CardType.mastercard: 'icons/mastercard.png',
@@ -46,6 +46,7 @@ class CustomCreditCardWidget extends StatefulWidget {
     this.isHolderNameVisible = false,
     this.backgroundImage,
     this.backgroundNetworkImage,
+    this.glassmorphismConfig,
     this.isChipVisible = true,
     this.isSwipeGestureEnabled = true,
     this.customCardTypeIcons = const <CustomCardTypeIcon>[],
@@ -53,9 +54,13 @@ class CustomCreditCardWidget extends StatefulWidget {
     this.padding = AppConstants.creditCardPadding,
     this.chipColor,
     this.frontCardBorder,
+    this.chipSizedBoxHeight,
+    this.validThruTextStyle,
+    this.sizedBoxCardName,
+    this.sizedBoxCardNumber,
     this.backCardBorder,
-    this.chippPadding,
-    this.sizedBoxValidThru,
+    this.expiryDateTextStyle,
+    this.cvvTextStyle,
     this.obscureInitialCardNumber = false,
   }) : super(key: key);
 
@@ -73,9 +78,6 @@ class CustomCreditCardWidget extends StatefulWidget {
 
   /// Applies text style to cardNumber, expiryDate, cardHolderName and cvvCode.
   final TextStyle? textStyle;
-
-  ///Applies padding to the chip Image
-  final EdgeInsets? chippPadding;
 
   /// Applies background color for card UI.
   final Color cardBgColor;
@@ -128,6 +130,9 @@ class CustomCreditCardWidget extends StatefulWidget {
   /// Enable/disable showcasing EMV chip UI. Defaults to true.
   final bool isChipVisible;
 
+  /// Used to provide glassmorphism effect to credit card widget.
+  final Glassmorphism? glassmorphismConfig;
+
   /// Enable/disable gestures on credit card widget. If enabled then flip
   /// animation is started when swiped or tapped. Defaults to true.
   final bool isSwipeGestureEnabled;
@@ -162,7 +167,13 @@ class CustomCreditCardWidget extends StatefulWidget {
   /// Provides border at back of credit card widget.
   final BoxBorder? backCardBorder;
 
-  final double? sizedBoxValidThru;
+  ///Chip customizable
+  final double? chipSizedBoxHeight;
+  final TextStyle? validThruTextStyle;
+  final double? sizedBoxCardNumber;
+  final double? sizedBoxCardName;
+  final TextStyle? expiryDateTextStyle;
+  final TextStyle? cvvTextStyle;
 
   @override
   _CustomCreditCardWidgetState createState() => _CustomCreditCardWidgetState();
@@ -241,7 +252,8 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
       isGestureUpdate = false;
     }
 
-    final CardType cardType = widget.cardType ?? detectCCType(widget.cardNumber);
+    final CardType cardType =
+        widget.cardType ?? detectCCType(widget.cardNumber);
     widget.onCreditCardWidgetChange(CreditCardBrand(cardType));
 
     return Stack(
@@ -359,11 +371,11 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
       backgroundImage: widget.backgroundImage,
       backgroundNetworkImage: widget.backgroundNetworkImage,
       backgroundGradientColor: backgroundGradientColor,
+      glassmorphismConfig: widget.glassmorphismConfig,
       height: widget.height,
       width: widget.width,
       padding: widget.padding,
       border: widget.frontCardBorder,
-      chipPadding: widget.chippPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -380,12 +392,14 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
                 ),
               ),
             ),
+          SizedBox(
+            height: widget.chipSizedBoxHeight,
+          ),
           Expanded(
             flex: widget.isChipVisible ? 1 : 0,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                const SizedBox(height: 10),
                 if (widget.isChipVisible)
                   Padding(
                     padding: const EdgeInsets.only(left: 16),
@@ -399,7 +413,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: widget.sizedBoxCardNumber),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 16),
@@ -409,6 +423,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
               ),
             ),
           ),
+          SizedBox(height: widget.sizedBoxCardName),
           Expanded(
             flex: 1,
             child: Padding(
@@ -419,17 +434,21 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
                 children: <Widget>[
                   Text(
                     widget.labelValidThru,
-                    style: widget.textStyle ??
+                    style: widget.validThruTextStyle ??
                         defaultTextStyle.copyWith(fontSize: 7),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(width: widget.sizedBoxValidThru ?? 8),
+                  const SizedBox(width: 5),
                   Text(
                     widget.expiryDate.isEmpty
                         ? widget.labelExpiredDate
                         : widget.expiryDate,
-                    style: widget.textStyle ?? defaultTextStyle,
+                    style: widget.expiryDateTextStyle ?? defaultTextStyle,
                   ),
+                  const Spacer(),
+                  widget.isHolderNameVisible == false && widget.cardType != null
+                      ? getCardTypeImage(widget.cardType)
+                      : getCardTypeIcon(widget.cardNumber),
                 ],
               ),
             ),
@@ -453,7 +472,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
                     ),
                   ),
                 ),
-                widget.cardType != null
+                widget.cardType != null && widget.isHolderNameVisible == true
                     ? getCardTypeImage(widget.cardType)
                     : getCardTypeIcon(widget.cardNumber),
               ],
@@ -486,6 +505,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
       backgroundImage: widget.backgroundImage,
       backgroundNetworkImage: widget.backgroundNetworkImage,
       backgroundGradientColor: backgroundGradientColor,
+      glassmorphismConfig: widget.glassmorphismConfig,
       height: widget.height,
       width: widget.width,
       padding: widget.padding,
@@ -529,7 +549,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
                                   : 'XXX'
                               : cvv,
                           maxLines: 1,
-                          style: widget.textStyle ?? defaultTextStyle,
+                          style: widget.cvvTextStyle ?? defaultTextStyle,
                         ),
                       ),
                     ),
@@ -701,7 +721,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
       return customCardTypeIcon.first.cardImage;
     } else {
       return Image.asset(
-        CardTypeIconAsset[cardType]!,
+        cardTypeIconAsset[cardType]!,
         height: 48,
         width: 48,
         package: 'flutter_credit_card',
@@ -728,7 +748,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
         case CardType.elo:
         case CardType.hipercard:
           icon = Image.asset(
-            CardTypeIconAsset[ccType]!,
+            cardTypeIconAsset[ccType]!,
             height: 48,
             width: 48,
             package: 'flutter_credit_card',
@@ -738,7 +758,7 @@ class _CustomCreditCardWidgetState extends State<CustomCreditCardWidget>
 
         case CardType.americanExpress:
           icon = Image.asset(
-            CardTypeIconAsset[ccType]!,
+            cardTypeIconAsset[ccType]!,
             height: 48,
             width: 48,
             package: 'flutter_credit_card',
