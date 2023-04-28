@@ -16,3 +16,7 @@
 * Remove the card holder name from the package.
 * Edit sized box.
 * Change default valid thru field for spanish text.
+
+## 0.0.6 
+
+* Update min SDK Version.
